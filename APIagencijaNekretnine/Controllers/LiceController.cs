@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AgencijaNekretnine;
+using Newtonsoft.Json.Linq;
+
 namespace APIagencijaNekretnine.Controllers
 {
     [ApiController]
@@ -82,8 +84,23 @@ namespace APIagencijaNekretnine.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult DodajTelefonLicu([FromBody] LiceBasic l, [FromBody]TelefonBasic t)
+        /*
+          public IActionResult DodajKPUgovor([FromBody]JObject data)
         {
+            var jmbgKupca = data["jmbgKupca"].ToObject<string>();
+            var ulicaBroj = data["ulicaBroj"].ToObject<string>();
+            var jmbgProdavca = data["jmbgProdavca"].ToObject<string>();
+         */
+
+        public IActionResult DodajTelefonLicu([FromBody]JObject data )
+        {
+            var jmbg = data["jmbg"].ToObject<string>();
+            LiceBasic l = new LiceBasic();
+            l.JMBG_PIB = jmbg;
+            var brTel = data["tel"].ToObject<string>();
+            TelefonBasic t = new TelefonBasic();
+            t.brTel = brTel;
+            
             try
             {
                 DTOmanager.dodajTelefonLicu(l, t);
