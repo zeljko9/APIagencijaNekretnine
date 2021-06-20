@@ -1,7 +1,9 @@
-﻿using AgencijaNekretnine;
+using AgencijaNekretnine;
+using AgencijaNekretnine.Entiteti;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,31 +15,17 @@ namespace APIagencijaNekretnine.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class NekretninaController : ControllerBase
+    public class KvartController : ControllerBase
     {
         [HttpGet]
-        [Route("vratiSveNekretnine")]
+        [Route("vratiKvartove")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult vratiSveNekretnine() {
+        public IActionResult vratiKvartove()
+        {
             try
             {
-                return new JsonResult(DTOmanager.vratiSveNekretnine());
-            }
-            catch (Exception e) {
-                return BadRequest(e.ToString());
-            }
-        }
-
-        [HttpPost]
-        [Route("dodajStambenuNekretninu")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult dodajStambenuNekretninu([FromBody] NekretninaBasic nb) {
-            try
-            {
-                DTOmanager.dodajStambenuNekretninu(nb);
-                return Ok();
+                return new JsonResult(DTOmanager.vratiKvartove());
             }
             catch (Exception e)
             {
@@ -46,48 +34,14 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpPost]
-        [Route("dodajPoslovnuNekretninu")]
+        [Route("dodajKvart")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult dodajPoslovnuNekretninu([FromBody] NekretninaBasic nb)
+        public IActionResult dodajKvart([FromBody]KvartBasic kb)
         {
             try
             {
-                DTOmanager.dodajPoslovnuNekretninu(nb);
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.ToString());
-            }
-        }
-
-        [HttpPut]
-        [Route("izmeniNekretninu")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult izmeniNekretninu([FromBody] NekretninaBasic nb)
-        {
-            try
-            {
-                DTOmanager.izmeniNekretninu(nb);
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.ToString());
-            }
-        }
-
-        [HttpPut]
-        [Route("izmeniOpremu")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult izmeniOpremu([FromBody] OpremaBasic ob)
-        {
-            try
-            {
-                DTOmanager.izmeniOpremu(ob);
+                DTOmanager.dodajKvart(kb);
                 return Ok();
             }
             catch (Exception e)
@@ -97,14 +51,47 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpGet]
-        [Route("vratiNekretninu/{idn}")]
+        [Route("vratiKvart/{idk}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult vratiSveNekretnine([FromRoute]string idn)
+        public IActionResult vratiKvart([FromRoute]string idk)
         {
             try
             {
-                return new JsonResult(DTOmanager.vratiNekretninu(Convert.ToInt32(idn)));
+                return new JsonResult(DTOmanager.vratiKvart(Convert.ToInt32(idk)));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Route("vratiKvartPoZoni/{zona}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult vratiKvartPoZoni([FromBody]string zona)
+        {
+            try
+            {
+                return new JsonResult(DTOmanager.vratiKvartPoZoni(Convert.ToInt32(zona)));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.ToString());
+            }
+        }
+
+        [HttpPut]
+        [Route("izmeniKvart")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult izmeniKvart([FromBody] KvartBasic kb)
+        {
+            try
+            {
+                DTOmanager.izmeniKvart(kb);
+                return Ok();
             }
             catch (Exception e)
             {
@@ -113,14 +100,14 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpDelete]
-        [Route("obrisiNekretninu/{idn}")]
+        [Route("obrisiKvart/{idk}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult obrisiNekretninu([FromRoute]string idn)
+        public IActionResult obrisiKvart([FromRoute] string idk)
         {
             try
             {
-                DTOmanager.obrisiNekretninu(Convert.ToInt32(idn));
+                DTOmanager.obrisiKvart(Convert.ToInt32(idk));
                 return Ok();
             }
             catch (Exception e)
@@ -129,17 +116,21 @@ namespace APIagencijaNekretnine.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("vratiSveNekretnineKvarta/{idk}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult vratiSveNekretnineKvarta([FromRoute] string idk)
+        {
+            try
+            {
+                return new JsonResult(DTOmanager.vratiSveNekretnineKvarta(Convert.ToInt32(idk)));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.ToString());
+            }
+        }
 
     }
 }
-
-
-/*
-            try
-            {
-
-            }
-            catch (Exception e) {
-                return BadRequest(e.ToString());
-            }
- */

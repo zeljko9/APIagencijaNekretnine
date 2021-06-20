@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AgencijaNekretnine
 {
-    class DTOmanager
+    public class DTOmanager
     {
         #region Nekretnine
         public static void dodajStambenuNekretninu(NekretninaBasic n)
@@ -1655,6 +1655,5 @@ namespace AgencijaNekretnine
 
         #endregion
         
-
     }
 }
