@@ -18,7 +18,7 @@ namespace APIagencijaNekretnine.Controllers
     public class KvartController : ControllerBase
     {
         [HttpGet]
-        [Route("vratiKvartove")]
+        [Route("vratiKvartove")]//RADI
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult vratiKvartove()
@@ -34,7 +34,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpPost]
-        [Route("dodajKvart")]
+        [Route("dodajKvart")] //RADII
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult dodajKvart([FromBody]KvartBasic kb)
@@ -51,7 +51,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpGet]
-        [Route("vratiKvart/{idk}")]
+        [Route("vratiKvart/{idk}")]//RADI
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult vratiKvart([FromRoute]string idk)
@@ -67,10 +67,10 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpGet]
-        [Route("vratiKvartPoZoni/{zona}")]
+        [Route("vratiKvartPoZoni/{zona}")]//RADI
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult vratiKvartPoZoni([FromBody]string zona)
+        public IActionResult vratiKvartPoZoni([FromRoute] string zona)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpPut]
-        [Route("izmeniKvart")]
+        [Route("izmeniKvart")]//RADII
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult izmeniKvart([FromBody] KvartBasic kb)
@@ -117,7 +117,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpGet]
-        [Route("vratiSveNekretnineKvarta/{idk}")]
+        [Route("vratiSveNekretnineKvarta/{idk}")]//RADII
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult vratiSveNekretnineKvarta([FromRoute] string idk)

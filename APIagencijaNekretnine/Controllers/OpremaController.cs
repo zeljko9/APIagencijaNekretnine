@@ -18,7 +18,7 @@ namespace APIagencijaNekretnine.Controllers
     public class OpremaController : ControllerBase
     {
         [HttpGet]
-        [Route("vratiSvuOpremu/{idn}")]
+        [Route("vratiSvuOpremu/{idn}")]//RADII
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult vratiSvuOpremu([FromRoute]string idn)
@@ -34,7 +34,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpPut]
-        [Route("izmeniOpremu")]
+        [Route("izmeniOpremu")]//RADII
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult izmeniOpremu([FromBody] Oprema o)
@@ -51,7 +51,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpPost]
-        [Route("dodajOpremu")]
+        [Route("dodajOpremu")]//RADII
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult dodajOpremu([FromBody] JObject o)
@@ -72,7 +72,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpDelete]
-        [Route("obrisiOpremu/{ido}")]
+        [Route("obrisiOpremu/{ido}")]//RADII
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult obrisiOpremu([FromRoute]string ido)
@@ -90,7 +90,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpGet]
-        [Route("vratiOpremu")]
+        [Route("vratiOpremu/{ido}")]//RADII
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult vratiOpremu([FromRoute]string ido)

@@ -14,7 +14,7 @@ namespace APIagencijaNekretnine.Controllers
     public class LiceController : ControllerBase
     {
         [HttpGet]
-        [Route("PreuzmiSvaLica")]
+        [Route("PreuzmiSvaLica")]//RADI
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetSvaLica()
         {
@@ -30,10 +30,10 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpGet]
-        [Route("PreuzmiVlasnika/idVlasnika")]
+        [Route("PreuzmiVlasnika/{idVlasnika}")]//RADII
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetVlasnika(int idVlasnika)
-        {
+        public IActionResult GetVlasnika([FromRoute] string idVlasnika)
+        { 
             try
             {
                 return new JsonResult(DTOmanager.vratiVlasnikaKupca(idVlasnika));
@@ -46,7 +46,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpPost]
-        [Route("DodajFizickoLice")]
+        [Route("DodajFizickoLice")]//RADII, hteo bih da doradim jedan deo
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult DodajFizickoLice([FromBody]LiceBasic l)
@@ -63,7 +63,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpPost]
-        [Route("DodajPravnoLice")]
+        [Route("DodajPravnoLice")]//RADI, HTEO BIH DA DORADIM
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult DodajPravnoLice([FromBody] LiceBasic l)
@@ -80,7 +80,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpPost]
-        [Route("DodajTelefonLicu")]
+        [Route("DodajTelefonLicu")]//RADII
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
@@ -113,7 +113,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpPut]
-        [Route("IzmeniLice")]
+        [Route("IzmeniLice")]//RADII
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
@@ -131,10 +131,10 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpDelete]
-        [Route("ObrisiLice/idLica")]
+        [Route("ObrisiLice/{idLica}")]//RADII
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-         public IActionResult ObrisiLice(int idLica)
+         public IActionResult ObrisiLice([FromRoute] string idLica)
         {
             try
             {

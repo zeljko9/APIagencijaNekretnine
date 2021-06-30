@@ -15,7 +15,7 @@ namespace APIagencijaNekretnine.Controllers
     {
        
         [HttpGet]
-        [Route("PreuzmiSvePoslovnice/")]
+        [Route("PreuzmiSvePoslovnice/")]//RADII
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetSvePoslovnice()
         {
@@ -30,7 +30,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpGet]
-        [Route("PreuzmiPoslovnicu/{idPoslovnice}")]
+        [Route("PreuzmiPoslovnicu/{idPoslovnice}")]//RADII
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetPoslovnicu(int idPoslovnice)
         {
@@ -45,7 +45,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpGet]
-        [Route("PreuzmiSveZaposlenePoslovnice/{idPoslovnice}")]
+        [Route("PreuzmiSveZaposlenePoslovnice/{idPoslovnice}")]//RADII
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetSveZaposlene(int idPoslovnice)
         {
@@ -60,7 +60,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpGet]
-        [Route("PreuzmiProdavca/{jmbgProdavca}")]
+        [Route("PreuzmiProdavca/{jmbgProdavca}")]//RADII
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetProdavca(string jmbgProdavca)
         {
@@ -75,7 +75,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpGet]
-        [Route("PreuzmiSveSefove/")]
+        [Route("PreuzmiSveSefove/")]//RADII
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetSveSefove()
         {
@@ -90,9 +90,9 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpGet]
-        [Route("PreuzmiSefa/{jmbgSefa}")]
+        [Route("PreuzmiSefa/{jmbgSefa}")]//RADII
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetSefa(string jmbgSefa)
+        public IActionResult GetSefa([FromRoute]string jmbgSefa)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpGet]
-        [Route("PreuzmiAgenteProdavca/{jmbgProdavca}")]
+        [Route("PreuzmiAgenteProdavca/{jmbgProdavca}")]//RADII
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetAgenteProdavca(string jmbgProdavca)
         {
@@ -121,7 +121,7 @@ namespace APIagencijaNekretnine.Controllers
 
 
         [HttpGet]
-        [Route("PreuzmiAgenta/{jmbgAgenta}")]
+        [Route("PreuzmiAgenta/{jmbgAgenta}")]//RADII
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetAgenta(string jmbgAgenta)
         {
@@ -136,7 +136,7 @@ namespace APIagencijaNekretnine.Controllers
         }
 
         [HttpPost]
-        [Route("DodajProdavca/{idPoslovnice}")]
+        [Route("DodajProdavca/{idPoslovnice}")]//OVDE SAM STAOO
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult DodajPoslovnicu(int idPoslovnice ,[FromBody]ZaposleniBasic z)

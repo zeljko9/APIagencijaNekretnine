@@ -24,7 +24,7 @@ namespace AgencijaNekretnine
                 nek.Vlasnik = s.Load<Lice>(n.Vlasnik.JMBG_PIB);
                 nek.PripadaKvartu = s.Load<Kvart>(n.pripadaKvartu.IDKvart);
                 nek.Ulica = n.Ulica;
-                nek.TipNekretnine = n.TipNekretnine;
+                nek.TipNekretnine = "Stambena";//n.TipNekretnine;
                 nek.Starost = n.Starost;
                 nek.Sprat = n.Sprat;
                 nek.BrKupatila = n.BrKupatila;
@@ -54,7 +54,7 @@ namespace AgencijaNekretnine
                 nek.Vlasnik = s.Load<Lice>(n.Vlasnik.JMBG_PIB);
                 nek.PripadaKvartu = s.Load<Kvart>(n.pripadaKvartu.IDKvart);
                 nek.Ulica = n.Ulica;
-                nek.TipNekretnine = n.TipNekretnine;
+                nek.TipNekretnine = "Poslovna";//n.TipNekretnine;
                 nek.Starost = n.Starost;
                 nek.Sprat = n.Sprat;
                 nek.BrKupatila = n.BrKupatila;
@@ -72,6 +72,9 @@ namespace AgencijaNekretnine
                 //System.Windows.Forms.MessageBox.Show(e.Message);
             }
         }
+
+
+        
 
         public static List<NekretninaBasic> vratiSveNekretnine()
         {
@@ -160,13 +163,16 @@ namespace AgencijaNekretnine
                 ISession s = DataLayer.GetSession();
 
                 Nekretnina nek = s.Load<Nekretnina>(id);
+                //Lice vlasnik = s.Load<Lice>(nek.Vlasnik.JMBG_PIB);
                 n = new NekretninaBasic(nek.IDNekretnina, nek.Ulica, nek.Broj, nek.Sprat, nek.Cena, nek.Starost, nek.DatumIzgradnje, nek.TipNekretnine, nek.BrKupatila);
                 n.pripadaKvartu = vratiKvart(nek.PripadaKvartu.IDKvart);
+                n.Vlasnik = vratiLice(nek.Vlasnik);
                 n.oprema = opreme;
                 s.Close();
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.ToString());
                 //System.Windows.Forms.MessageBox.Show(e.Message);
             }
             return n;
@@ -439,11 +445,15 @@ namespace AgencijaNekretnine
             PoslovnicaBasic pos = new PoslovnicaBasic();
             try
             {
+                List < ZaposleniBasic > zaposleni = DTOmanager.vratiZaposlenePoslovnice(id);
+                List<KvartBasic> kvartovi = DTOmanager.vratiKvartovePoslovnice(id);
                 ISession s = DataLayer.GetSession();
                 Poslovnica p = s.Load<Poslovnica>(id);
                 pos.Adresa = p.Adresa;
                 pos.RadnoVreme = p.RadnoVreme;
                 pos.IDPoslovnice = p.IDPoslovnice;
+                pos.listaZaposlenih = zaposleni;
+                pos.nagledaKvartove = kvartovi;
             }
             catch (Exception e)
             {
@@ -468,7 +478,7 @@ namespace AgencijaNekretnine
                 foreach (Zaposleni p in prodavci)
                 {
                     ZaposleniBasic prod = new ZaposleniBasic(p.JMBG, p.Ime, p.Prezime, p.DatZaposlenja, p.StrucnaSprema, p.SefFlag, p.DatPostavljanja);
-                    prod.radiUPoslovnici = DTOmanager.vratiPoslovnicu(p.RadiUPoslovnici.IDPoslovnice);
+                    //prod.radiUPoslovnici = DTOmanager.vratiPoslovnicu(p.RadiUPoslovnici.IDPoslovnice);
                     listaProdavaca.Add(prod);
                 }
             }
@@ -854,6 +864,8 @@ namespace AgencijaNekretnine
                 {
                     KvartBasic kvart = new KvartBasic(k.IDKvart, k.Zona);
                     kvart.pripadaPoslovnici = DTOmanager.vratiPoslovnicu(k.PripadaPoslovnici.IDPoslovnice);
+                    kvart.listaNekretnina = DTOmanager.vratiSveNekretnineKvarta(k.IDKvart);
+
                     listaKvartova.Add(kvart);
                 }
             }
@@ -864,6 +876,8 @@ namespace AgencijaNekretnine
 
             return listaKvartova;
         }
+
+
 
 
 
@@ -887,6 +901,29 @@ namespace AgencijaNekretnine
             }
         }
 
+        public static List<KvartBasic> vratiKvartovePoslovnice(int idPoslovnice)
+        {
+            List<KvartBasic> listaKvartova = new List<KvartBasic>();
+            try
+            {
+                ISession s = DataLayer.GetSession();
+                List<Kvart> kvartovi = (from kv in s.Query<Kvart>()
+                                     where kv.PripadaPoslovnici.IDPoslovnice == idPoslovnice
+                                     select kv).ToList<Kvart>();
+
+                foreach(Kvart k in kvartovi)
+                {
+                    KvartBasic kn = new KvartBasic(k.IDKvart, k.Zona);
+                    listaKvartova.Add(kn);
+                }
+
+                return listaKvartova;
+            }
+            catch(Exception e)
+            {
+                return listaKvartova;
+            }
+        }
 
         public static KvartBasic vratiKvart(int id)
         {
@@ -1094,6 +1131,8 @@ namespace AgencijaNekretnine
                 {
 
                     LiceBasic lice = new LiceBasic(l.JMBG_PIB, l.Ime, l.Prezime, l.Adresa);
+                    lice.listaNekretninaUPosedu = DTOmanager.vratiSveNekretnineVlasnika(lice.JMBG_PIB);
+                    lice.listaTelefona = DTOmanager.vratiTelefoneLica(lice.JMBG_PIB);
                     lica.Add(lice);
                     /*if (n.IDNekretnina == 0)
                     {
@@ -1117,6 +1156,56 @@ namespace AgencijaNekretnine
             return lica;
         }
 
+        public static List<TelefonBasic> vratiTelefoneLica(string jmbg)
+        {
+            List<TelefonBasic> listaTelefona = new List<TelefonBasic>();
+            try
+            {
+                ISession s = DataLayer.GetSession();
+                IEnumerable<Telefon> vraceniTelefoni = (from t in s.Query<Telefon>()
+                                                             where t.PripadaLicu.JMBG_PIB == jmbg
+                                                             select t);
+
+                foreach (Telefon tel in vraceniTelefoni)
+                {
+                    TelefonBasic telefon = new TelefonBasic();
+                    telefon.brTel = tel.brTel;
+                    listaTelefona.Add(telefon);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            return listaTelefona;
+        }
+
+        public static List<NekretninaBasic> vratiSveNekretnineVlasnika(string jmbg)
+        {
+            List<NekretninaBasic> listaNekretnina = new List<NekretninaBasic>();
+            try
+            {
+                ISession s = DataLayer.GetSession();
+                IEnumerable<Nekretnina> vraceneNekretnine = (from n in s.Query<Nekretnina>()
+                                   where n.Vlasnik.JMBG_PIB == jmbg
+                                   select n);
+
+                foreach(Nekretnina nek in vraceneNekretnine)
+                {
+                    NekretninaBasic nekretn = new NekretninaBasic();
+                    nekretn.Ulica = nek.Ulica;
+                    nekretn.Broj = nek.Broj;
+                    nekretn.IDNekretnina = nek.IDNekretnina;
+                    listaNekretnina.Add(nekretn);
+                }
+            }
+            catch(Exception e)
+            {
+
+            }
+            return listaNekretnina;
+        }
+
         public static LiceBasic vratiLice(Lice l)
         {
             LiceBasic lb = new LiceBasic();
@@ -1130,6 +1219,8 @@ namespace AgencijaNekretnine
                 lb.Prezime = lice.Prezime;
                 lb.JMBG_PIB = lice.JMBG_PIB;
                 lb.Adresa = lice.Adresa;
+                lb.listaNekretninaUPosedu = DTOmanager.vratiSveNekretnineVlasnika(lb.JMBG_PIB);
+                lb.listaTelefona = DTOmanager.vratiTelefoneLica(lb.JMBG_PIB);
 
                 s.Close();
 
@@ -1196,16 +1287,32 @@ namespace AgencijaNekretnine
 
                 ISession s = DataLayer.GetSession();
 
-                Telefon t = new Telefon();
+                //Telefon t = new Telefon();
                 Lice l = new Lice();
-
-                t.brTel = lb.listaTelefona[0].brTel;
-                t.PripadaLicu = l;
+               // while(lb.listaTelefona.Count - 1 > )
+                //t.brTel = lb.listaTelefona[0].brTel;
+                foreach(TelefonBasic tel in lb.listaTelefona)
+                {
+                    Telefon telefon = new Telefon();
+                    telefon.brTel = tel.brTel;
+                    telefon.IDTelefon = tel.IDTelefon;
+                    telefon.PripadaLicu = l;
+                    l.TelefoniLica.Add(telefon);
+                }
+                foreach(NekretninaBasic nekretnina in lb.listaNekretninaUPosedu)
+                {
+                    Nekretnina nek = new Nekretnina();
+                    nek.IDNekretnina = nekretnina.IDNekretnina;
+                    nek.Ulica = nekretnina.Ulica;
+                    nek.Broj = nekretnina.Broj;
+                    l.listaNekretninaUPosedu.Add(nek);
+                }
+                
 
                 l.JMBG_PIB = lb.JMBG_PIB;
                 l.Ime = lb.Ime;
                 l.Prezime = lb.Prezime;
-                l.TelefoniLica.Add(t);
+                //l.TelefoniLica.Add(t);
                 l.Adresa = lb.Adresa;
                 l.TipLica = "Fizicko";
 
@@ -1294,7 +1401,7 @@ namespace AgencijaNekretnine
             }
         }
 
-        public static void obrisiLice(int jp) {
+        public static void obrisiLice(string jp) {
             try
             {
                 ISession s = DataLayer.GetSession();
@@ -1311,15 +1418,17 @@ namespace AgencijaNekretnine
             }
         }
 
-        public static LiceBasic vratiVlasnikaKupca(int vlasnikID)
+        public static LiceBasic vratiVlasnikaKupca(string vlasnikID)
         {
+
+            
             try
             {
                 ISession s = DataLayer.GetSession();
 
                 Lice l = s.Load<Lice>(vlasnikID);
 
-                s.Close();
+                
 
                 
 
@@ -1329,6 +1438,14 @@ namespace AgencijaNekretnine
                 lb.Adresa = l.Adresa;
                 lb.Ime = l.Ime;
                 lb.JMBG_PIB = l.JMBG_PIB;
+                foreach(Telefon tel in l.TelefoniLica)
+                {
+                    TelefonBasic t = new TelefonBasic();
+                    t.brTel = tel.brTel;
+                    lb.listaTelefona.Add(t);
+                }
+
+                s.Close();
 
                 return lb;
 
